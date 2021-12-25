@@ -1,7 +1,7 @@
 <?php # Script 18.10 - forgot_password.php
 //  This page allows a user to reset their password, if forgotten
 require ('includes/config.inc.php');
-$page_title = 'Fogot your Password';
+$page_title = 'Forgot your Password';
 include ('includes/header.html');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   } else {
       //  No email!
-      echo '<p class="error">You forgot to enter your emil aaddress!</p>';
+      echo '<p class="error">You forgot to enter your email aaddress!</p>';
     } //  End of empty($_POST['email']) IF.
 
     if ($uid) {
@@ -63,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         exit(); //  Stop the script.
 
       } else {
-        //  If it did not ru OK.
+        //  If it did not run OK.
         echo '<p class="error">Your pssword could not be changed
           due to a system error. We apologize for any inconvenience.</p>';
       }

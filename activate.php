@@ -10,7 +10,7 @@ if (isset($_GET['x'], $_GET['y']) && filter_var($_GET['x'], FILTER_VALIDATE_EMAI
   && (strlen($_GET['y']) == 32)) {
     //  Update the database...
     require (MYSQL);
-    $q = "UPDATE users ST active=NULL WHERE (email='" .
+    $q = "UPDATE users SET active=NULL WHERE (email='" .
       mysqli_real_escape_string($dbc, $_GET['x']) . "' AND
       active='" . mysqli_real_escape_string($dbc, $_GET['y']) . "') LIMIT 1";
     $r = mysqli_query ($dbc, $q) or trigger_error("Querry: 
@@ -29,7 +29,7 @@ if (isset($_GET['x'], $_GET['y']) && filter_var($_GET['x'], FILTER_VALIDATE_EMAI
     //  Redirect.
     $url = BASE_URL . 'index.php';  //  Define the URL.
     ob_end_clean(); //  Delete the buffer.
-    header("Loction: $url");
+    header("Location: $url");
     exit(); //  Quit the script.
   } //  End of main IF-ELSE.
 

@@ -1,34 +1,3 @@
-<?php # Script 18.1 - header.html
-//  This page begins the HTML header for the site.
-
-//  Start output buffering:
-ob_start();
-
-//  Initialize a session:
-session_start();
-
-//  Check for a $page_title value:
-if (!isset($page_title)) {
-  $page_title = 'User Registration';
-}
-
-?>
-
-<!--
-
-  The application in this chapter will use
-a new template design A. This template
-makes extensive use of Cascading Style
-Sheets (CSS), creating a clean look without
-the need for images. It has tested well on
-all current browsers and will appear as
-unformatted text on browsers that don’t
-support CSS2. The layout for this site
-is derived from one freely provided by
-BlueRobot (www.bluerobot.com).
-
-
--->
 
 
     <!--  Start of Footer -->
@@ -38,28 +7,71 @@ BlueRobot (www.bluerobot.com).
   <a href="index.php" title="Home Page">Home</a><br />
   <?php # Script 18.2 - footer.html
     //  This page completes the HTML template.
+/*  just testin
+    var_dump($_SESSION);
+    var_dump($_SESSION['user_level']);
+    var_dump($_SESSION['user_id']);
+
+    */
 
     //  Display links based upon the login status:
     if (isset($_SESSION['user_id'])) {
       echo '<a href="logout.php" title="Logout">
               Logout
-            </div>a><br />
-    <a href="change_password.php" title="Change Your Password">
+            </a><br />
+            <a href="change_password.php" title="Change Your Password">
       Change Password
     </a><br />
     ';
-    //  Add links if the user is an administrator:
-    if ($_SESSION['user_level'] == 1) {
-      echo '<a href="view_users.php" title="View All Users">
-              View Users
-            </a><br />
+    /*  nemas ani view_user.php, ani admin level, tak ti to vyhadzuje takyto error:
 
-    <a href="#">Some Admin Page</a><br />
-    ';
-    }
+    An error occured in script
+'C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg\includes\footer.html' on line 22: Undefined array key "user_level"
+Date/Time: 12-25-2021 15:40:51
+#0  my_error_handler(2, Undefined array key "user_level", C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg\includes\footer.html, 22) called at [C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg\includes\footer.html:22]
+#1  include(C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg\includes\footer.html) called at [C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg\index.php:31]
+Some Page
+
+
+
+p 602 
+Site Administration
+For this application, how the site
+administration works depends upon
+what you want it to do. One additional
+page you would probably want for an
+administrator would be a view_users.
+php script, like the one created in
+Chapter 9 and modified in Chapter 10,
+“Common Programming Techniques.”
+It’s already listed in the administrator’s
+links. You could use such a script to link
+to an edit_user.php page, which would
+allow the administrator to manually
+activate an account, declare that a user
+is an administrator, or change a person’s
+password. An administrator could also
+delete a user using such a page.
+While the footer file creates links to
+administrative pages only if the loggedin
+user is an administrator, every administration
+page should also include such
+a check.
+
+
+      //  Add links if the user is an administrator:
+      if ($_SESSION['user_level'] == 1) {
+        echo '<a href="view_users.php" title="View All Users">
+                View Users
+              </a><br />
+
+              <a href="#">Some Admin Page</a><br />
+      ';
+      } 
+           */ 
     } else {
       //  Not logged in.
-      echo '<a href="register.php" title="Register for the site">
+      echo '<a href="http://localhost/register.php" title="Register for the site">
               Register
             </a><br />
             <a href="login.php" title="Login">Login</a><br />

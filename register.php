@@ -2,10 +2,10 @@
 //  This is the registration page for the site.
 
 //  Include the configuration file:
-require ('includes/config.inc.php')
+require ('includes/config.inc.php');
 
 //  Set the page title and include the HTML header:
-$page_title = 'Rgister';
+$page_title = 'Register';
 include ('includes/header.html');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -15,14 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   require (MYSQL);
 
   //  Trim all the incoming data:
-  $trimmed = aray_map('trim', $_POST);
+  $trimmed = array_map('trim', $_POST);
 
   //  Assume invalid values:
   $fn = $ln = $e = $p = FALSE;
 
   //  Check for a first name:
   if (preg_match ('/^[A-Z \'.-]{2, 20}$/i', $trimmed['first_name'])) {
-    $fn = mysqli_real_escape_string($dc, $trimmed['first_name']);
+    $fn = mysqli_real_escape_string($dbc, $trimmed['first_name']);
   } else {
     echo '<p class="error">Please enter your first name!</p>';
   }
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($fn && $ln && $e && $p) {
     //  If everything's OK...
     //  Make sure the email address is available:
-    $q = "SELCT user_id FROM users WHERE email='$e'";
+    $q = "SELECT user_id FROM users WHERE email='$e'";
     $r = mysqli_query ($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
 
     if (mysqli_num_rows($r) == 0) {
@@ -97,9 +97,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </p>';
     }
 
-    else {
+  } else {
       //  If one of the data tests failed.
-      echo '<p class="error">Plese try again.</p>'
+      echo '<p class="error">Plese try again.</p>';
     }
 
     mysqli_close($dbc);

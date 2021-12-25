@@ -14,13 +14,13 @@
   define ('LIVE', FALSE);
 
  //  Admin contact address:
-  define ('cordelfenevall@gmail.com, Courts of Chaos');
+  define ('EMAIL', 'cordelfenevall@gmail.com');
 
  // Site URL (basee for all redirections):
-  define ('BASE_URL', 'http://www.exmple.com/');
+  define ('BASE_URL', 'http://localhost:3000/');   //  when online 'http://www.example.com/'
 
  // Loction of the MySQL connection script:
-  define ('MYSQL', '/path/to/mysqli_connect.php');
+  define ('MYSQL', 'mysqli_connect.php');    //  where '/path/to/mysqli_connect.php'
 
  // Adjust the time zone for PHP 5.1 and greater:
   date_default_timezone_set ('US/Eastern');
@@ -33,13 +33,13 @@
  // ****************ERROR MANAGEMENT****************** //
 
  // Create the error handler:
-  function my_error_handler ($e_number, $e_message, $e_file, $e_line, $e_vars) {
+  function my_error_handler ($e_number = null, $e_message = null, $e_file = null, $e_line = null, $e_vars = null) {
     //  Build the error message:
     $message = "An error occured in script 
     '$e_file' on line $e_line: $e_message\n";
 
     //  Add the date and time:
-    $mesage .= "Date/Time: " . date('n-j-Y H:i:s') . "\n";
+    $message .= "Date/Time: " . date('n-j-Y H:i:s') . "\n";
 
     if (!LIVE) {
       //  Development (print the error).
@@ -53,13 +53,13 @@
       echo '</pre></div>';
     } else {
       //  Don't show the error:
-      //  end an email to the admin:
-      $body = $mesage . "\n" . print_r($e_vars, 1);
+      //  Send an email to the admin:
+      $body = $message . "\n" . print_r($e_vars, 1);
       mail(EMAIL, 'Site Error!', $body, 'From: email@example.com');
 
       //  Only print an error mesage if the error isn't a notice:
       if ($e_number != E_NOTICE) {
-        echo '<div clss="error">A system error occurred. 
+        echo '<div class="error">A system error occurred. 
         We apologize for the inconvenience.</div><br />';
       }
     } //  End of !LIVE IF.

@@ -29,14 +29,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
           FROM users WHERE
           (email='$e' AND pass=SHA1('$p')) AND active IS NULL";
     $r = mysqli_query ($dbc, $q) 
-      or triggerr_error("Query: $q\n<br />MySQL Error: " 
+      or trigger_error("Query: $q\n<br />MySQL Error: " 
       . mysqli_error($dbc));
 
     if (@mysqli_num_rows($r) == 1) {
       //  A match was made.
 
         //  Register the values:
-        $_SESSION = mysqli_fetch_array($r, MYSQLI_ASSOC);
+        $_SESSION = mysqli_fetch_array($r, MYSQLI_ASSOC);   //  inak tu sa do session zapisuju userove premenne
         mysqli_free_result($r);
         mysqli_close($dbc);
 
