@@ -1,7 +1,7 @@
 <?php # Script 18.4 - mysqli_connect.php
 //  This file contains the database access information.
 //  This file also establishes  connection to MySQL
-//  and selects the dtabase.
+//  and selects the database.
 
 //  Set the database access information as constants
 

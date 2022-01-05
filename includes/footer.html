@@ -7,13 +7,55 @@
   <a href="index.php" title="Home Page">Home</a><br />
   <?php # Script 18.2 - footer.html
     //  This page completes the HTML template.
-/*  just testin
-    var_dump($_SESSION);
-    var_dump($_SESSION['user_level']);
-    var_dump($_SESSION['user_id']);
 
-    */
+   //  dummy login profiles
+  //  $_SESSION['user_id'] = 1;
+  //  $_SESSION['user_tz'] = 'America/
+  //  ➝ New_York';
+  
+  //  dummy login admin
+  //  $_SESSION['user_level'] = 1;
+  
+  //  dummy logout
+  //  $_SESSION = array();
 
+
+  //  akoze ak neni user_id a user_level, tak nech nic, 
+  //  pri najhorsom aj query by chcelo mozno...
+  //  lebo user level je iba v ch18ke
+/*  tiez asi len test..?
+  if (!isset($_SESSION['user_id']) && !isset($_SESSION['user_level'])) {
+    $_SESSION = array();  //  Destroy the variables.
+    session_destroy();  //  Destroy the session itself.
+    setcookie (session_name(), '', time()-3600);  //  Destroy the cookie.
+  }
+  
+  */
+  
+  
+  
+    //just testin
+    if (isset($_SESSION)) {
+      var_dump($_SESSION);
+    } else {
+      echo '$_SESSION not set\n';
+    };
+    echo "<br />";
+    if (isset($_SESSION['user_level'])) {
+      var_dump($_SESSION['user_level']);
+  } else {
+    echo '$_SESSION[user_level] not set\n';
+  };
+  echo "<br />";
+    if (isset($_SESSION['user_id'])) {
+      var_dump($_SESSION['user_id']);
+    } else {
+      echo '$_SESSION[user_id] not set\n';
+    };
+    echo "<br />";
+
+//  inak tu si to vynulujes, jak kokot  
+//$_SESSION = array();
     //  Display links based upon the login status:
     if (isset($_SESSION['user_id'])) {
       echo '<a href="logout.php" title="Logout">
@@ -57,7 +99,7 @@ administrative pages only if the loggedin
 user is an administrator, every administration
 page should also include such
 a check.
-
+*/
 
       //  Add links if the user is an administrator:
       if ($_SESSION['user_level'] == 1) {
@@ -68,10 +110,10 @@ a check.
               <a href="#">Some Admin Page</a><br />
       ';
       } 
-           */ 
+            
     } else {
-      //  Not logged in.
-      echo '<a href="http://localhost/register.php" title="Register for the site">
+      //  Not logged in.  //  "http://localhost/register.php"
+      echo '<a href="register.php" title="Register for the site">   
               Register
             </a><br />
             <a href="login.php" title="Login">Login</a><br />

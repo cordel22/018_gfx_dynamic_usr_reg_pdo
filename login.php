@@ -1,5 +1,5 @@
 <?php # Script 18.8 - login.php
-//  This is the login pge for the site.
+//  This is the login page for the site.
 require ('includes/config.inc.php');
 $page_title = 'Login';
 include ('includes/header.html');
@@ -55,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
   } else {
     //  If everything wasn't OK.
-    echo '<p clss="error">Please try again.</p>';
+    echo '<p class="error">Please try again.</p>';
   }
   mysqli_close($dbc);
 } //  End of SUBMIT conditional.

@@ -17,7 +17,7 @@ if (!isset($_SESSION['first_name'])) {
   //  Log out the user.
   $_SESSION = array();  //  Destroy the variables.
   session_destroy();  //  Destroy the session itself.
-  setcookie (session_name(), '', time()-3600);  //  Destoy the cookie.
+  setcookie (session_name(), '', time()-3600);  //  Destroy the cookie.
 }
 
 //  Print a customized message:

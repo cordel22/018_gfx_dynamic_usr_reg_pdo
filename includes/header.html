@@ -33,21 +33,48 @@ BlueRobot (www.bluerobot.com).
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
   <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <html>
-      <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-      <title>
-        <?php
-          echo $page_title;
-        ?>
-      </title>
-      <style type="text/css" media="screen">
-        @import "includes/layout.css";
-      </style>
-      </html>
-    </head>
-    <body>
-      <div id="Header">User Registration</div>
-        <div id="Content">
+    
+      <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <title>
+          <?php
+            echo $page_title;
+          ?>
+        </title>
+        <style type="text/css" media="screen">
+          @import "includes/layout.css";
+        </style>
+        
+      </head>
+      <body>
+        <div id="Header">User Registration</div>
+          <div id="Content">
+
+<?php
+
+//just testin
+    if (isset($_SESSION)) {
+      var_dump($_SESSION);
+    } else {
+      echo '$_SESSION not set\n';
+    };
+    echo "<br />";
+    if (isset($_SESSION['user_level'])) {
+      var_dump($_SESSION['user_level']);
+  } else {
+    echo '$_SESSION[user_level] not set\n';
+  };
+  echo "<br />";
+    if (isset($_SESSION['user_id'])) {
+      var_dump($_SESSION['user_id']);
+    } else {
+      echo '$_SESSION[user_id] not set\n';
+    };
+    echo "<br />";
+
+
+?>
+
     <!--  End of Header -->
 
 
