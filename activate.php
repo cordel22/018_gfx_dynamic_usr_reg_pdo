@@ -15,21 +15,33 @@ if (
 ) {
   //  Update the database...
   require(MYSQL);
-  $q = "UPDATE users SET active=NULL WHERE (email='" .
-    mysqli_real_escape_string($dbc, $_GET['x']) . "' AND
-      active='" . mysqli_real_escape_string($dbc, $_GET['y']) . "') LIMIT 1";
-  $r = mysqli_query($dbc, $q) or trigger_error("Query: 
-      $q\n<br />MySQL Error: " . mysqli_error($dbc));
+  // $q = "UPDATE users SET active=NULL WHERE (email='" .
+  //   mysqli_real_escape_string($dbc, $_GET['x']) . "' AND
+  //     active='" . mysqli_real_escape_string($dbc, $_GET['y']) . "') LIMIT 1";
+  // $r = mysqli_query($dbc, $q) or trigger_error("Query: 
+  //     $q\n<br />MySQL Error: " . mysqli_error($dbc));
+
+  $sql = "UPDATE users SET active = :name
+           WHERE (email = :email  AND active = :active) LIMIT 1";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute(array(
+    ':name' => NULL,
+    ':email' => $_GET['x'],
+    ':active' => $_GET['y']
+  )); //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+
 
   //  Print a customized message:
-  if (mysqli_affected_rows($dbc) == 1) {
+  //  if (mysqli_affected_rows($dbc) == 1) {
+  if ($stmt->rowCount() == 1) {
     echo "<h3>Your account is now active.
       You may now log in.</h3>";
   } else {
     echo '<p class="error">Your account could not be activated.
       Plese re-check the link or contact the system administrator.</p>';
   }
-  mysqli_close($dbc);
+  //  mysqli_close($dbc);
+  $stmt = null;
 } else {
   //  Redirect.
   $url = BASE_URL . 'index.php';  //  Define the URL.

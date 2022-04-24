@@ -22,15 +22,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   //  Check for a first name:
   if (preg_match('/^[A-Z \'.-]{2,20}$/i', $trimmed['first_name'])) {
-    $fn = mysqli_real_escape_string($dbc, $trimmed['first_name']);
+    //  $fn = mysqli_real_escape_string($dbc, $trimmed['first_name']);  //  not necessary when using PDO  https://stackoverflow.com/questions/15648228/how-to-use-write-mysql-real-escape-string-in-pdo
+    $fn = $trimmed['first_name'];
   } else {
     echo '<p class="error">Please enter your first name!</p>';
-    echo 'lets see, you put in : ' . $trimmed['first_name'];
+    echo 'lets see, you put in : ' . $trimmed['first_name'];    //  this line aint in book
   }
 
   //  Check for a last name:
   if (preg_match('/^[A-Z \'.-]{2,40}$/i', $trimmed['last_name'])) {
-    $ln = mysqli_real_escape_string($dbc, $trimmed['last_name']);
+    //  $ln = mysqli_real_escape_string($dbc, $trimmed['last_name']);   //  not necessary when using PDO  https://stackoverflow.com/questions/15648228/how-to-use-write-mysql-real-escape-string-in-pdo
+    $ln = $trimmed['last_name'];
   } else {
     echo '<p class="error">Please enter your last name!</p>';
     //  echo 'lets see, you put in : ' . $trimmed['last_name'];
@@ -38,7 +40,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   //  Check for an email address:
   if (filter_var($trimmed['email'], FILTER_VALIDATE_EMAIL)) {
-    $e = mysqli_real_escape_string($dbc, $trimmed['email']);
+    //  $e = mysqli_real_escape_string($dbc, $trimmed['email']);    //  not necessary when using PDO  https://stackoverflow.com/questions/15648228/how-to-use-write-mysql-real-escape-string-in-pdo
+    $e = $trimmed['email'];
   } else {
     echo '<p class="error">Please enter a valid email address!</p>';
     //  echo 'lets see, you put in : ' . $trimmed['email'];
@@ -47,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   //  Check for a password and match aginst the confirmed password:
   if (preg_match('/^\w{4,20}$/', $trimmed['password1'])) {
     if ($trimmed['password1'] == $trimmed['password2']) {
-      $p = mysqli_real_escape_string($dbc,  $trimmed['password1']);
+      //  $p = mysqli_real_escape_string($dbc,  $trimmed['password1']);   //  //  not necessary when using PDO  https://stackoverflow.com/questions/15648228/how-to-use-write-mysql-real-escape-string-in-pdo
+      $p = $trimmed['password1'];
     } else {
       //  echo '<p class="error">Your password did not match the confirmed password!</p>';
     }
@@ -59,21 +63,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if ($fn && $ln && $e && $p) {
     //  If everything's OK...
     //  Make sure the email address is available:
-    $q = "SELECT user_id FROM users WHERE email='$e'";
-    $r = mysqli_query($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+    //  $q = "SELECT user_id FROM users WHERE email='$e'";
+    //  $r = mysqli_query($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
 
-    if (mysqli_num_rows($r) == 0) {
+    $q = "SELECT user_id FROM users WHERE email='$e'";
+    $stmt = $pdo->query($q); //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));;
+    $row_count = $stmt->rowCount();
+
+    //  if (mysqli_num_rows($r) == 0) {
+    if ($row_count == 0) {
       //  Available.
 
       //  Create the activation code:
       $a = md5(uniqid(rand(), true));
 
       //  Add the user to the database:
-      $q = "INSERT INTO users (email, pass, first_name, last_name, active,
-      registration_date) VALUES ('$e', SHA1('$p'), '$fn', '$ln', '$a', NOW() )";
-      $r = mysqli_query($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+      // $q = "INSERT INTO users (email, pass, first_name, last_name, active,
+      // registration_date) VALUES ('$e', SHA1('$p'), '$fn', '$ln', '$a', NOW() )";
+      // $r = mysqli_query($dbc, $q) or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
 
-      if (mysqli_affected_rows($dbc) == 1) {
+      $sql = "INSERT INTO users (email, pass, first_name, last_name, active,
+      registration_date) VALUES (:email, :pass, :first_name, :last_name, :active, NOW() )";
+      //  $r = mysqli_query($dbc, $q);
+      $stmt = $pdo->prepare($sql);
+      $r = $stmt->execute(array(
+        ':email' => $e,
+        ':pass' => SHA1('$p'),  //  todo, u sure bout the string quotes''?
+        ':first_name' => $fn,
+        ':last_name' => $ln,
+        ':active' => $a,
+        //  ':registration_date' => $subject
+      ));
+
+
+      //  if (mysqli_affected_rows($dbc) == 1) {
+      if ($stmt->rowCount() == 1) {
         //  If it ran OK.
 
         /* 
@@ -127,7 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo '<p class="error">Plese try again.</p>';
   }
 
-  mysqli_close($dbc);
+  //  mysqli_close($dbc);
+  //  https://stackoverflow.com/questions/18277233/pdo-closing-connection
+  $stmt = null;
 } //  End of the main Submit conditional.
 ?>
 

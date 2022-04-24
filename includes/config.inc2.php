@@ -17,10 +17,10 @@ define('LIVE', FALSE);
 define('EMAIL', 'cordelfenevall@gmail.com');
 
 // Site URL (base for all redirections):
-define('BASE_URL', 'http://localhost:3000/');   //  when online 'http://www.example.com/'
+define('BASE_URL', 'https://reg.demo.djirieonline.com/');   //  when online 'http://www.example.com/'
 
 // Absolute location of the MySQL connection script:
-define('MYSQL', 'C:\Users\Sisi\Desktop\akcia_14_07_21\php-14-07-21\gfx_dynamic_php_mysql\018_gfx_dynamic_usr_reg_pdo\pdo.php');    //  where '/path/to/mysqli_connect.php'
+define('MYSQL', '/home3/vladkomeciar/reg.demo.djirieonline.com/mysqli_connect.php');    //  where '/path/to/mysqli_connect.php'
 //  define('MYSQL', 'C:/Users/Sisi/Desktop/akcia_14_07_21/php-14-07-21/gfx_dynamic_php_mysql/018_gfx_dynamic_usr_reg/mysqli_connect.php');
 
 

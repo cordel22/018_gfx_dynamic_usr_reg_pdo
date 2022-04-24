@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $p = FALSE;
   if (preg_match('/^(\w){4,20}$/', $_POST['password1'])) {
     if ($_POST['password1'] == $_POST['password2']) {
-      $p = mysqli_real_escape_string($dbc, $_POST['password1']);
+      //  $p = mysqli_real_escape_string($dbc, $_POST['password1']);
+      $p = $_POST['password1'];
     } else {
       echo '<p class="error">Your password did not match the 
           confirmed password!</p>';
@@ -31,16 +32,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   if ($p) { //  If everything's OK.
     //  Make the query:
-    $q = "UPDATE users SET pass=SHA1('$p') WHERE user_id=
+    /* $q = "UPDATE users SET pass=SHA1('$p') WHERE user_id=
         {$_SESSION['user_id']} LIMIT 1";
     $r = mysqli_query($dbc, $q) or trigger_error(
       "Query: $q\n<br />MySQL Error: " . mysqli_error($dbc)
-    );
-    if (mysqli_affected_rows($dbc) == 1) {
+    ); */
+
+    $p = SHA1('$p');
+    $uid = (int) $_SESSION['user_id'];
+
+
+
+    $sql = "UPDATE users SET pass = :pass WHERE user_id = :user_id LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(
+      ':pass' => $p,
+      ':user_id' => $uid
+    )); //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+
+
+    //  if (mysqli_affected_rows($dbc) == 1) {
+    if ($stmt->rowCount() == 1) {
       //  If it ran OK.
       //  Send an email, if desired.
       echo '<h3>Your password has been chnged.</h3>';
-      mysqli_close($dbc); //  Close the database connection.
+      //  mysqli_close($dbc); //  Close the database connection.
+      $stmt = null;
       include('includes/footer.html'); //  Include the HTML footer.
       exit();
     } else {
@@ -56,7 +73,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo '<p class="error">Please try again.</p>';
   }
 
-  mysqli_close($dbc);   //  Close the database connection.
+  //  mysqli_close($dbc);   //  Close the database connection.
+  $stmt = null;
 } //  End of the main Submit conditional.
 
 ?>

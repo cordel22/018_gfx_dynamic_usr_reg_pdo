@@ -13,15 +13,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   //  Validate the email address...
   if (!empty($_POST['email'])) {
     //  Check for the existence of that email address...
-    $q = 'SELECT user_id FROM users WHERE email="'
+    /* $q = 'SELECT user_id FROM users WHERE email="'
       . mysqli_real_escape_string($dbc, $_POST['email']) . '"';
     $r = mysqli_query($dbc, $q) or trigger_error(
-      "Query: $q\n<br />MySQL Error: " . mysqli_error($dbc)
-    );
+      "Query: $q\n<br />MySQL Error: " . mysqli_error($dbc) */
 
-    if (mysqli_num_rows($r) == 1) {
+    $stmt = $pdo->prepare("SELECT user_id FROM users WHERE email = :xyz");
+    $stmt->execute(array(":xyz" =>  $_POST['email']));  //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc)
+
+    //  $stmt = $pdo->query($q);  //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc)
+
+
+    //  if (mysqli_num_rows($r) == 1) {
+    $row_count = $stmt->rowCount();
+    if ($row_count == 1) {
+
+      //  debug
+      echo "<br />";
+      var_dump($stmt);
+      echo "<br />";
+
+
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+      echo "<br />";
+      var_dump($row);
+      echo "<br />";
+      //  debug
+
       //  Retrieve the user ID:
-      list($uid) = mysqli_fetch_array($r, MYSQLI_NUM);
+      //  list($uid) = mysqli_fetch_array($r, MYSQLI_NUM);
+      //  list($uid) = $stmt->fetch(PDO::FETCH_ASSOC);
+      //$uid = $stmt->fetch(PDO::FETCH_ASSOC);
+      $uid = (int) $row['user_id'];
+
+      //  debug
+      echo "<br />";
+      var_dump($uid);
+      echo "<br />";
+      //  debug
+
     } else {
       //  No database match made.
       echo '<p class="error">The submitted email address 
@@ -33,17 +63,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   } //  End of empty($_POST['email']) IF.
 
   if ($uid) {
+
+    //  debug
+    echo "<br />";
+    var_dump($uid);
+    echo "<br />";
+    //  debug
     //  If everything's OK.
     //  Create  a new, random password:
     $p = substr(md5(uniqid(rand(), true)), 3, 10);
+    $pShalene = SHA1('$p');  //  shalene ti nejde v statemente...
 
     //  Update the database:
-    $q = "UPDATE users SET pass=SHA1('$p') WHERE user_id=$uid LIMIT 1";
+    /* $q = "UPDATE users SET pass=SHA1('$p') WHERE user_id=$uid LIMIT 1";
     $r = mysqli_query($dbc, $q) or trigger_error(
       "Query: $q\n<br />MySQL Error: " . mysqli_error($dbc)
-    );
+    ); */
 
-    if (mysqli_affected_rows($dbc) == 1) {
+    //  debug
+    echo "<br />";
+    var_dump($p);
+    echo "<br />";
+    var_dump($pShalene);
+    echo "<br />";
+    var_dump($uid);
+    //  debug
+    /*  tu kurva co je za problem, rozdeleny riadok..?
+    $sql = "UPDATE users SET pass = :pass
+            WHERE user_id = :user_id LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(
+      //  ':pass' => SHA1('$p'),
+      ':pass' => $pShalene,
+      ':user_id' => $uid
+    )); //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+ */
+
+
+
+    $sql = "UPDATE users SET pass = :pass WHERE user_id = :user_id LIMIT 1";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute(array(
+      ':pass' => $p,
+      ':user_id' => $uid
+    )); //  or trigger_error("Query: $q\n<br />MySQL Error: " . mysqli_error($dbc));
+
+
+
+    //  if (mysqli_affected_rows($dbc) == 1) {
+    if ($stmt->rowCount() == 1) {
       //  If it ran OK.
 
       //  Send an email:
@@ -71,7 +139,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
               once logged in, change it for whatever you wnt;)
               </div>";
 
-      mysqli_close($dbc);
+      //  mysqli_close($dbc);
+      $stmt = null;
       include('includes/footer.html');
       exit(); //  Stop the script.
 
@@ -85,7 +154,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     echo '<p class="error">Please try again.</p>';
   }
 
-  mysqli_close($dbc);
+  //  mysqli_close($dbc);
+  $stmt = null;
 } //  End of the main Submit conditional.
 
 ?>
